@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { useQuery } from "react-query";
+import "./App.css";
 
 function App() {
+  const getNames = async () => {
+    const data = await fetch("http://localhost:5001/name");
+
+    const res = await data.json();
+    console.log(res);
+    return res;
+  };
+  const { data, status } = useQuery("namess", getNames);
+
+  if (status == "loading") return <h1>Loading</h1>;
+  if (status == "error") return <h1>Error</h1>;
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {data.map((val) => (
+        <h3 key={val}>{val}</h3>
+      ))}
     </div>
   );
 }
